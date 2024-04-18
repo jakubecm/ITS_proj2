@@ -1,10 +1,8 @@
 import time, string, random
 from behave import given, when, then
 from selenium.webdriver.common.by import By
-from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-from selenium.webdriver.support.ui import Select
 
 @given(u'the user is logged as an admin')
 def step_impl(context):
