@@ -12,6 +12,11 @@ Feature: Manipulating with the shopping cart
         Given user is on the home page and the cart contains 1 featured "MacBook" product
         When user clicks the "Add to Cart" button on the same featured "MacBook" product
         Then the cart should contain 2 items
+    
+    Scenario: Removing product from cart (16)
+        Given user is on Shopping Cart page and the cart contains 1 product
+        When user clicks the "Remove" button
+        Then the cart should be empty
 
     Scenario: Adding product of >1 quantity to cart from product page (12)
         Given user is on the product page and the cart is empty
@@ -37,21 +42,15 @@ Feature: Manipulating with the shopping cart
         And user clicks the "Update" button
         Then the cart should contain 1 product of quantity 3
 
-    #Scenario: Removing product from cart (16)
-     #   Given user is on Shopping Cart page and the cart contains 1 product
-      #  When user clicks the "Remove" button
-       # Then the cart should be empty
-
     Scenario: Proceeding to checkout from cart (17)
         Given user is on Shopping Cart page and the cart is not empty
         When user clicks the "Checkout" button
         Then the user should be redirected to the Checkout page
 
-   #Scenario: Confirming order (18)
+  # Scenario: Confirming order (18)
         #Given user is on the Checkout page
-       # When user fills in the required fields
+        #When user fills in the required fields
         #And clicks the "Confirm Order" button
-       # Then the order should be confirmed
-        #And the user should be redirected to the Order Confirmation page
+        #Then the order should be confirmed
 
     

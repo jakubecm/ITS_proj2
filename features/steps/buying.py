@@ -3,7 +3,8 @@ from behave import given, when, then
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-from selenium.common.exceptions import ElementClickInterceptedException, TimeoutException
+from selenium.common.exceptions import ElementClickInterceptedException, TimeoutException, NoSuchElementException
+from selenium.webdriver.support.ui import Select
 
 @given(u'user is on the home page and the cart is empty')
 def step_impl(context):
@@ -79,15 +80,18 @@ def step_impl(context):
 
 @given(u'user is on the product page and the cart is empty')
 def step_impl(context):
-    context.driver.get(context.base_url + "/en-gb/product/macbook")
+    context.driver.get(context.base_url + "/en-gb/product/iPhone")
     
     # click the cart button and empty it
     cart_element = context.driver.find_element(By.ID, "header-cart")
     cart_button = cart_element.find_element(By.CLASS_NAME, "btn")
     cart_button.click()
-    #click the remove
-    remove_button = context.driver.find_element(By.CLASS_NAME, "btn-danger")
-    remove_button.click()
+    #click the remove if it exists
+    try:
+        remove_button = context.driver.find_element(By.CLASS_NAME, "btn-danger")
+        remove_button.click()
+    except NoSuchElementException:
+        pass
 
     assert "0" in cart_button.text
 
@@ -207,6 +211,25 @@ def step_impl(context):
 def step_impl(context):
     assert "Checkout" == context.driver.title
 
+@given(u'user is on Shopping Cart page and the cart contains 1 product')
+def step_impl(context):
+    context.driver.get(context.base_url + "/en-gb?route=checkout/cart")
+    assert "Shopping Cart" == context.driver.title
+    # assert only one <tr> element in <table>
+    cart_table = context.driver.find_element(By.CLASS_NAME, "table-responsive")
+    cart_rows = cart_table.find_elements(By.TAG_NAME, "tr")
+    assert 6 == len(cart_rows)
 
+@when(u'user clicks the "Remove" button')
+def step_impl(context):
+    remove_button = context.driver.find_element(By.XPATH,"//button[2]/i")
+    remove_button.click()
+
+@then(u'the cart should be empty')
+def step_impl(context):
+    WebDriverWait(context.driver, 5).until(
+        EC.visibility_of_element_located((By.XPATH, "//div[@id='content']/p"))
+    )
+    assert "Your shopping cart is empty!" in context.driver.page_source
 
 
